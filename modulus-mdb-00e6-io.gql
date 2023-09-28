@@ -1,0 +1,186 @@
+schema {
+    query: graphQlQuery
+}
+
+# The query type, represents all of the entry points into our object graph
+type graphQlQuery {
+    artexRealTimeData: Map
+    tradingModeHistory(security: String!, date: String!): [TradingModeHistory]!
+    finalAuctions(security: String!, beginDate: String!, endDate: String!, period: String!): [FinalAuctions]!
+    auction(orderId: Int!, status: Int!): Auction
+    lastTrades(nbTrades: Int, security: String!): [Trade]!
+    globalVolumePrices: [GlobalVolumePrices]
+    delayedTrades(security: String!): [Trade]!
+    realTimeTrades(security: String!): [Trade]!
+    allTradesDetails(security: String!, beginDate: String!, endDate: String!): [AllTradesDetails]!
+    tradesByPeriod(security: String!, beginDate: String!, endDate: String!): [TradesByPeriod]!
+    delayedBestBidAskOrders(security: String!): BestOrders
+    realTimeBestBidAskOrders(security: String!): BestOrders
+    closeOpenPrices(security: String!): Trades!
+    historicalOrders(date: String, security: String!, lastId: Int!): HistoricalOrders!
+    bestBidAskReport(date: String!): Map
+    news(beginDate: String!, endDate: String!):[News]
+    vcm(security: String!, date: String!): [Vcm]
+    manageGtcOrders: GtcOrders!
+    mdbStatus: Status!
+}
+
+type GlobalVolumePrices {
+    security: String
+    volume: Float
+    high_price: Float
+    low_price: Float
+}
+
+type Vcm {
+    date: String!
+    start: String!
+    end: String!
+    ref_price: Float!
+    upper_limit: Float!
+    lower_limit: Float!
+}
+
+type News {
+    date: Time
+    security_id: String
+    currency: String
+    urgency: String
+    headline: String
+    text: String
+    origin_time: Time
+    security_id_source: String
+    urllink: String
+    market_id: String
+}
+
+type HistoricalOrders {
+    historical: [Order]
+    pagination: Pagination!
+}
+
+type Order {
+    orderId: Int!
+    size: Float!
+    side: String!
+    type: String!
+    timeInForce: String!
+    limitPrice: Float!
+    quoteId: Int!
+    userId: Int!
+    bid: Int!
+    timeAccepted: Time!
+    timeModified: Time!
+    status: String!
+    messageId: String!
+    remaining: Float!
+    resubmitMarketOrder: Boolean!
+    idAuctions: Int!
+    isAuctionOrder: Boolean!
+    tradingMode: String!
+    firstOrderId: Int!
+    originalOrderId: Int
+    originalDateOrderId: Time
+    trade: AllTradesDetails
+    auction: Auction
+}
+
+type TradingModeHistory {
+    trading_mode: String!
+    start_date: String!
+    end_date: String!
+}
+
+type TradesByPeriod {
+    date: Time!
+    opening_price: Float!
+    closing_price: Float!
+    high_price: Float!
+    low_price: Float!
+    volume: Float!
+}
+
+type FinalAuctions {
+    date: Time!
+    price: Float!
+    buysurplus: Float!
+    sellsurplus: Float!
+    trades: Int!
+    executable: Float!
+}
+
+type Auction {
+    date: Time
+    price: Float
+    buysurplus: Float
+    sellsurplus: Float
+    executable: Float
+}
+
+type Trade {
+    price: Float!
+    size: Float!
+    date: Time!
+}
+
+type AllTradesDetails {
+    date: Time!
+    security: String!
+    buyer_userid: Int!
+    seller_userid: Int!
+    buy_orderid: Int!
+    sell_orderid: Int!
+    maker_orderid: Int!
+    taker_orderid: Int!
+    timestamp: Time!
+    price: Float!
+    size: Float!
+    mode: String!
+    status: String!
+    tradeid: Int!
+}
+
+type Trades {
+    open: Trade
+    close: Trade
+}
+
+type BestOrders {
+    bestbidorder:  Orders
+    bestaskorder: Orders
+}
+
+type Orders {
+    size: Float
+    type: Int
+    limitPrice: Float
+    stopPrice: Float
+    trailingAmount: Float
+    balance: Float
+    bid: Int
+    remaining: Float
+    timeAccepted: Time
+    timeModified: Time
+}
+
+type GtcOrders {
+    error: String
+    status: String!
+    message: String
+    nborders: Int
+    listorders:[Int]
+    listorderfailed:[Int]
+}
+
+type Status {
+    status: Boolean!
+}
+
+type Pagination {
+    lastId: Int!
+    hasNext: Boolean!
+}
+
+
+scalar Time
+scalar Map

@@ -1,0 +1,259 @@
+scalar BigInt
+scalar Date
+scalar AnyObject
+
+type Artist {
+    id_artist: BigInt!
+    img: String!
+    name: String!
+    slug: String!
+    category: String!
+    description: String!
+    nationality: String!
+    wiki_url: String!
+    nb_catalogs: BigInt!
+    nb_paintings: BigInt!
+    earning: BigInt!
+    unmatched: Boolean
+}
+
+type Catalogue {
+    id: BigInt!
+    name: String!
+    id_artist: BigInt!
+    author: String!
+    img_url: String
+    volume: Float!
+    base_pdf_url: String!
+    nb_pages: Float
+    year: Float
+}
+
+type Painting {
+    id_painting: BigInt!
+    index: String!
+    medium: String
+    museum: String
+    title: String
+    img: String
+    num_inv: String
+    cr_ref: String
+    creation_date: String
+    year_ref: Float
+    creation_place: String
+    description: String
+    bibliography: String
+    exhibition: String
+    provenance: String
+    signature: String
+    accessible: Boolean!
+    in_museum: Boolean!
+    location_text: String
+    dimensions: String
+    height: Float
+    width: Float
+}
+
+type Price {
+    id_price: BigInt!
+    id_artist: BigInt!
+    org: String
+    sale_date: Date
+    sale_place: String
+    img: String
+    currency: String
+    hammer: Float
+    hammer_wprem: Float
+    hammer_usd: Float
+    hammer_wprem_usd: Float
+    lowest: Float
+    highest: Float
+    sold: Boolean!
+    is_price_act: Boolean!
+    price_before_auct: Float
+    price_auction: Float
+    price: Float
+}
+
+type Artwork {
+    id_painting: BigInt!
+    index: String
+    id_medium: BigInt
+    medium: String
+    museum: String
+    title: String
+    img: String
+    num_inv: String
+    cr_ref: String
+    creation_date: String
+    year_ref: Float
+    creation_place: String
+    description: String
+    bibliography: String
+    exhibition: String
+    provenance: String
+    signature: String
+    notes: String
+    accessible: Boolean!
+    in_museum: Boolean!
+    location_text: String
+    dimensions: String
+    height: Float
+    width: Float
+    subjects: [AnyObject]
+    periods: [AnyObject]
+    auctions: [Price!]
+    comparables: [String!]
+    comparablesIDs: [BigInt!]
+}
+
+type ArtistChartParameters {
+    startSaleDate: Date
+    endSaleDate: Date
+    startProdYear: Int
+    endProdYear: Int
+    startLength: Float
+    endLength: Float
+    startWidth: Float
+    endWidth: Float
+}
+
+input UpdateAccLocationInput {
+    id_painting: BigInt!
+    accessible: Boolean
+    in_museum: Boolean
+    location_text: String
+}
+
+type Top5SellerData {
+    id_artist: BigInt!
+    name: String
+    img: String
+    category: String
+    earning: Float
+}
+
+type Top5ProductiveData {
+    id_artist: BigInt!
+    name: String
+    img: String
+    category: String
+    total: BigInt
+}
+
+type MatchingPaintingData {
+    id_painting: BigInt
+    title: String
+    img: String
+    medium: String
+    height: BigInt
+    width: BigInt
+    year: BigInt
+}
+
+type MatchingPriceData {
+    id_price: BigInt
+    title: String
+    img: String
+    medium: String
+    dimensions: String
+    year: BigInt
+}
+
+type PaintingDetailsData {
+    main: Artwork
+    comparables: [Artwork]
+}
+
+type RepeatSale {
+    id_painting: BigInt!
+    index: String!
+    medium: String
+    title: String
+    img: String
+    year_ref: Float
+    height: Float
+    width: Float
+    subjects: [AnyObject]
+    periods: [AnyObject]
+    auctions: [Price!]
+}
+
+input UpdateSaleInput {
+    id_price: BigInt!
+    org: String
+    sale_date: String
+    sale_place: String
+    currency: String
+    hammer: Float
+    hammer_wprem: Float
+    hammer_usd: Float
+    hammer_wprem_usd: Float
+    lowest: Float
+    highest: Float
+    sold: Boolean
+    price_before_auct: Float
+    price_auction: Float
+    price: Float
+}
+
+input UpdatePaintingInput {
+    id_painting: BigInt!
+    title: String
+    index: String
+    cr_ref: String
+    height: BigInt
+    width: BigInt
+    year_ref: BigInt
+    periods: [BigInt]
+    subjects: [BigInt]
+    id_medium: BigInt!
+    accessible: Boolean
+    in_museum: Boolean
+    location_text: String
+    description: String
+    bibliography: String
+    exhibition: String
+    provenance: String
+    signature: String
+    notes: String
+}
+
+type MediumData {
+    id: BigInt
+    medium: String
+}
+
+type Query {
+    getArtists: [Artist!]
+    getCatalogues: [Catalogue!]
+    getArtistCatalogues(id_artist: BigInt!): [Catalogue!]
+    getPaintings(id_artist: BigInt!): [Painting!]!
+    getPrices(id_artist: BigInt!): [Price!]!
+    getArtworks(id_artist: BigInt!): [Artwork!]!
+    getArtistPeriods(id_artist: BigInt!): [AnyObject]
+    getArtistSubjects(id_artist: BigInt!): [AnyObject]
+    getArtistChartParameters(id_artist: BigInt!): ArtistChartParameters
+    top5SellerArtists: [Top5SellerData]
+    top5ProductiveArtists: [Top5ProductiveData]
+    getMatchingPaintings(id_artist: BigInt!): [MatchingPaintingData]
+    getMatchingPrices(id_artist: BigInt!): [MatchingPriceData]
+    getPaintingDetails(id_painting: BigInt!, comparables: [BigInt!]): PaintingDetailsData
+    getRepeatSales(id_artist: BigInt!): [RepeatSale!]
+    getOrders(id_artist: BigInt!): [Artwork!]
+    getAllMediums: [MediumData]
+    getAllCurrencies: [String]
+}
+
+type Mutation {
+    updateAccessible(id: BigInt!, value: Boolean!): AnyObject
+    updateInMuseum(id: BigInt!, value: Boolean!): AnyObject
+    updateLocationText(id: BigInt!, value: String): AnyObject
+    updateAccLocation(input: UpdateAccLocationInput): AnyObject
+    updatePeriods(id: BigInt!, values: [BigInt!]): AnyObject
+    updateSubjects(id: BigInt!, values: [BigInt!]): AnyObject
+    updateComparables(id: BigInt!, values: [BigInt!]): AnyObject
+    addMatching(id_price: BigInt!, id_painting: BigInt!): AnyObject
+    updateSale(input: UpdateSaleInput): AnyObject
+    updatePainting(input: UpdatePaintingInput): AnyObject
+}

@@ -1,0 +1,34 @@
+type Interval {
+    """
+    Start of the interval (included)
+    """
+    start: String!
+    """
+    End of the interval (excluded)
+    """
+    end: String!
+    """
+    Interval description
+    """
+    description: String
+    """
+    Interval description
+    """
+    type: Int
+    """
+    Interval code
+    """
+    code: String
+}
+
+type ExchangeDay {
+    date: String!
+    intervals: [Interval!]
+}
+
+type Query {
+    """
+    Exchange closing intervals for given date
+    """
+    getOperationIntervals(date: String!, timezone: String): ExchangeDay
+}
